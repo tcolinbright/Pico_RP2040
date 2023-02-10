@@ -1,23 +1,30 @@
+'''This displays temperature and humidty data from the DHT11 and displays it to the 240x240 LCD on the Pico_Explorer
+General functionality of buttons
+a = change c/f (from main menu)
+b = back (from main menu it will display C and F)
+x = display F or C only
+y = pir mode for given menu'''
+
+
+
 import time
 from pimoroni import Button
 from picographics import PicoGraphics, DISPLAY_PICO_EXPLORER, PEN_P4
 import dht
 import machine
 
-sensor = dht.DHT11(machine.Pin(4))
-pir = machine.Pin(1, machine.Pin.IN, machine.Pin.PULL_UP)
-led_onboard = machine.Pin(25, machine.Pin.OUT)
-# We're only using a few colours so we can use a 4 bit/16 colour palette and save RAM!
-display = PicoGraphics(display=DISPLAY_PICO_EXPLORER, pen_type=PEN_P4)
+sensor = dht.DHT11(machine.Pin(4)) #Assign pn for DHT11
+pir = machine.Pin(1, machine.Pin.IN, machine.Pin.PULL_UP) #Assign pin for PIR sensor
+led_onboard = machine.Pin(25, machine.Pin.OUT) #Assign pin for onboard LED
+display = PicoGraphics(display=DISPLAY_PICO_EXPLORER, pen_type=PEN_P4) #define the display
 
+#Assign Buttons
 button_a = Button(12)
 button_b = Button(13)
 button_x = Button(14)
 button_y = Button(15)
 
-
-
-
+#Create colors
 WHITE = display.create_pen(255, 255, 255)
 BLACK = display.create_pen(0, 0, 0)
 CYAN = display.create_pen(0, 255, 255)
@@ -27,18 +34,18 @@ GREEN = display.create_pen(0, 255, 0)
 RED = display.create_pen(255, 0, 0)
 BLUE = display.create_pen(0, 0, 255)
 
+#Global Variables
 pir_color = WHITE
-
 use_imperial = True
-use_PIR = False
 
-def clear():
+
+def clear(): #shortcut to wipe the screen (flashes)
     display.set_pen(BLACK)
     display.clear()
     display.update()
     
 
-def menu_main_temp_humidity(color_temp, color_humidity, refresh_time):
+def menu_main_temp_humidity(color_temp, color_humidity, refresh_time): #Main menu to display
     update_numbers()
     sensor.measure()
     temp = sensor.temperature()
@@ -55,7 +62,7 @@ def menu_main_temp_humidity(color_temp, color_humidity, refresh_time):
     display.update()
     time.sleep(refresh_time)
 
-def menu_main_cf(color_c, color_f, refresh_time):
+def menu_main_cf(color_c, color_f, refresh_time): #Displays both C and F
     while True:
         if button_b.read():
             break
@@ -74,7 +81,7 @@ def menu_main_cf(color_c, color_f, refresh_time):
             display.update()
             time.sleep(refresh_time)
 
-def menu_main_f_only(color, refresh_time):
+def menu_main_f_only(color, refresh_time): #Shows on F
     while True:
         if button_b.read():
             break
@@ -92,7 +99,7 @@ def menu_main_f_only(color, refresh_time):
             display.update()
             time.sleep(refresh_time)
     
-def menu_main_c_only(color, refresh_time):
+def menu_main_c_only(color, refresh_time): #Shows only C
         while True:
             if button_b.read():
                 break
@@ -108,7 +115,7 @@ def menu_main_c_only(color, refresh_time):
                 display.update()
                 time.sleep(refresh_time)
     
-def update_numbers():
+def update_numbers(): #colors screen black, doesn't flash the screen.
     display.set_pen(BLACK)
     display.rectangle(10,10,220,220)
     
@@ -117,7 +124,7 @@ def update_numbers():
   #move colors to a list to cycle through with a for loop
     #change local variable by 1.
 
-def show_large_c(color, time_on):
+def show_large_c(color, time_on): #Graphic to display when selecting C as temp
     clear()
     display.set_pen(color)
     display.text(f"°C",30,50, scale=20)
@@ -125,7 +132,7 @@ def show_large_c(color, time_on):
     time.sleep(time_on)
     clear()
 
-def show_large_f(color, time_on):
+def show_large_f(color, time_on): #Graphic to display when selecting F as temp
     clear()
     display.set_pen(color)
     display.text(f"°F",30,50, scale=20)
@@ -133,7 +140,7 @@ def show_large_f(color, time_on):
     time.sleep(time_on)
     clear()
 
-def pir_mode(func):
+def pir_mode(func): #runs the menu but with pir color, only displays when motion detected
     while True:
         if button_b.read():
             break
@@ -144,7 +151,7 @@ def pir_mode(func):
             clear()
 
 
-def change_cf_mode():
+def change_cf_mode(): #Changes global variable to change if C or F is displayed.
     if use_imperial == False:
         global use_imperial
         use_imperial = True
@@ -156,7 +163,7 @@ def change_cf_mode():
         show_large_c(CYAN, 3) 
 
 
-def menu_switch_cf():
+def menu_switch_cf(): #Shortcut to choose which menu to display based on global variable use_imperial
     if use_imperial == True:
         menu_main_f_only(WHITE,1)
     else:
@@ -164,11 +171,13 @@ def menu_switch_cf():
 
 ##  Start ##
 
+
+
 #Setup display and pick font
 display.set_font("bitmap8")
 clear()
 
-while True:
+while True: #Cycles through code waiting for button to be pressed.
     if button_a.read():
         change_cf_mode()
 
