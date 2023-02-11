@@ -126,6 +126,8 @@ def update_numbers(): #colors screen black, doesn't flash the screen.
 
 def show_large_c(color, time_on): #Graphic to display when selecting C as temp
     clear()
+    global use_imperial
+    use_imperial = False
     display.set_pen(color)
     display.text(f"°C",30,50, scale=20)
     display.update()
@@ -134,18 +136,20 @@ def show_large_c(color, time_on): #Graphic to display when selecting C as temp
 
 def show_large_f(color, time_on): #Graphic to display when selecting F as temp
     clear()
+    global use_imperial
+    use_imperial = True
     display.set_pen(color)
     display.text(f"°F",30,50, scale=20)
     display.update()
     time.sleep(time_on)
     clear()
 
-def pir_mode(func): #runs the menu but with pir color, only displays when motion detected
+def pir_mode(): #Changes font color and displays only when motion is detected.
     while True:
         if button_b.read():
             break
         elif pir.value() == 1:
-            func()
+            menu_main_temp_humidity(WHITE, WHITE, 1)
             time.sleep(1)
         else:
             clear()
@@ -153,13 +157,9 @@ def pir_mode(func): #runs the menu but with pir color, only displays when motion
 
 def change_cf_mode(): #Changes global variable to change if C or F is displayed.
     if use_imperial == False:
-        global use_imperial
-        use_imperial = True
         show_large_f(YELLOW, 3)
 
     else:
-        global use_imperial
-        use_imperial = False 
         show_large_c(CYAN, 3) 
 
 
@@ -185,7 +185,7 @@ while True: #Cycles through code waiting for button to be pressed.
         menu_switch_cf()
 
     elif button_y.read():
-        pir_mode(menu_main_temp_humidity(pir_color, pir_color, 1))
+        pir_mode()
 
     elif button_b.read():
         menu_main_cf(RED, BLUE, 1)
