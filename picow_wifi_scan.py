@@ -1,41 +1,35 @@
 import network
 import binascii
 import time
+
+
 nic = network.WLAN(network.STA_IF)
 nic.active(True)
  
-n = 4 #number of networks to show (based on strongest singnals in this case)
+n = 2 #number of networks to show (based on strongest singnals in this case)
 scan_time = 2 #number of seconds between scans
-
 
 
 def sort_by_dbm(e):
     return e[3]
 
-def top_networks():
+def top_networks(scan_int):
     networks = nic.scan()
     networks.sort(key=sort_by_dbm, reverse=True)
     networks = networks[0:n]
-    return networks
-
-def formatting(scan_int, scan_output):
-    for net in scan_output:
-        
+    for net in networks:
         ssid = str(net[0])
-        channel = net[2]
-        dbm = net[3]
-        security = str(net[4])
-        
         if ssid == "b''":
             ssid = "Hidden"
         else:
             ssid = ssid.replace("b'", "")
             ssid = ssid.replace("'","")
-        
-        bssid = str(binascii.hexlify(net[1], ":")) #changes hex to normal numbers
+        bssid = str(binascii.hexlify(net[1], ":"))
         bssid = bssid.replace("b'", "")
         bssid = bssid.replace("'","")
-
+        channel = net[2]
+        dbm = net[3]
+        security = str(net[4])
         if security == '0':
             security = "Open"
         elif security == '1':
@@ -55,6 +49,4 @@ def formatting(scan_int, scan_output):
 
 
 while True:
-    networks = top_networks()
-    top_networks()
-    formatting(2, networks)
+    top_networks(scan_time)
