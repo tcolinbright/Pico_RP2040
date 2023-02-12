@@ -6,7 +6,6 @@ nic.active(True)
  
 n = 2 #number of networks to show (based on strongest singnals in this case)
 scan_time = 2 #number of seconds between scans
-ssid_focus = "Astronomy Tower"
 
 
 def sort_by_dbm(e):
