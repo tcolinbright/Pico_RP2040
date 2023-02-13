@@ -40,6 +40,32 @@ def get_unique_bssid(input_list):
             bssid_txt.close()
     
 
+def create_ssid_list(scan):
+    ssid_list_full = []
+    networks = scan
+    for net in networks:
+        ssid = str(net[0])
+        if ssid == "b''":
+            ssid = "Hidden"
+        else:
+            ssid = ssid.replace("b'", "")
+            ssid = ssid.replace("'","")
+        ssid_list_full.append(ssid)
+    
+    return ssid_list_full
+
+
+def get_unique_ssid(input_list):
+    for ssid in input_list:
+        if ssid in unique_ssid:
+            continue
+        else:
+            unique_ssid.append(ssid)
+            ssid_txt = open(r'unique_ssid.txt', 'at')
+            ssid_txt.write(f'{ssid}\n')
+            ssid_txt.close()
+
+
 def top_networks(show_top, scan):
     '''Sorts networks by dbm reading and returns the top n amount of them'''
     
@@ -68,34 +94,26 @@ def formatting(scan_output):
         bssid = str(binascii.hexlify(net[1], ":")) #changes hex to normal numbers
         bssid = bssid.replace("b'", "")
         bssid = bssid.replace("'","")
-
- #Security codes are outputting different codes from documentation
-#         if security == '0':
-#             security = "Open"
-#         elif security == '1':
-#             security = "WEP"
-#         elif security == '2':
-#             security = "WPA-PSK"
-#         elif security == '3':
-#             security = "WPA2-PSK"
-#         elif security == '4':
-#             security = "WPA/WPA-PSK"
        
         print(f'SSID: {ssid}\nBSSID: {bssid} | CH: {channel}  | Dbm: {dbm}\n\n-------------------\n')
-        #print(f'---------------------\n\nSSID: {ssid}\nBSSID: {bssid}\nCH: {channel}\nDb: {dbm}\nSecurity: {security}\n')
-        #print(f'Security: {security}')
-   
+
+
 def end_scan_line(scan_int):
     print("\n*********\n")
     time.sleep(scan_int)
 
-unique_bssid = []
+# Start Here #
+
+unique_bssid = [] # Create empty list of bssid's
+unique_ssid = [] # Create empty list of SSID's
 
 while True:
     scan = nic.scan()
     total_networks_found(scan)
     bssid_list = create_bssid_list(scan)
     get_unique_bssid(bssid_list)
+    ssid_list = create_ssid_list(scan)
+    get_unique_ssid(ssid_list)
     networks = top_networks(n, scan)
     formatting(networks)
     end_scan_line(2)
