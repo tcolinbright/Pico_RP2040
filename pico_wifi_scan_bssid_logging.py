@@ -8,9 +8,7 @@ n = 4 #number of networks to show (based on strongest singnals in this case)
 scan_time = 2 #number of seconds between scans
 
 
-
-
-    
+   
 def total_networks_found(scan):
     networks_found = len(scan)
     print(f'Total Networks Found: {networks_found}\n')
@@ -31,17 +29,6 @@ def create_bssid_list(scan):
     return bssid_list_full
 
 
-# def get_unique_bssid(input_list):
-#     #unique_bssid = []
-# 
-#     for bssid in input_list:
-#         if bssid in unique_bssid:
-#             continue
-#         else:
-#             unique_bssid.append(bssid)
-#     return unique_bssid
-
-
 def get_unique_bssid(input_list):
     for bssid in input_list:
         if bssid in unique_bssid:
@@ -51,15 +38,7 @@ def get_unique_bssid(input_list):
             bssid_txt = open(r'unique_bssid.txt', 'at')
             bssid_txt.write(f'{bssid}\n')
             bssid_txt.close()
-    return unique_bssid
-
-
-# #def log_bssid(uniq_bssid):
-#     bssid_list = open(r'unique_bssid.txt', 'at')
-#     for bssid in uniq_bssid:
-#         bssid_list.write(f'{bssid}\n')
-#     bssid_list.close()
-
+    
 
 def top_networks(show_top, scan):
     '''Sorts networks by dbm reading and returns the top n amount of them'''
@@ -117,8 +96,7 @@ while True:
     total_networks_found(scan)
     bssid_list = create_bssid_list(scan)
     get_unique_bssid(bssid_list)
-    #print(unique_bssid)
     networks = top_networks(n, scan)
     formatting(networks)
-    #log_bssid(uniq_bssid)
     end_scan_line(2)
+
