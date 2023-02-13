@@ -26,6 +26,34 @@ def create_bssid_list(scan):
     print(f'Discovered {total_aps} Access Points')
     return bssid_list_full
 
+#def unique(input_list):
+ 
+    # initialize a null list
+    unique_list = []
+ 
+    # traverse for all elements
+    for x in input_list:
+        # check if exists in unique_list or not
+        if x not in unique_list:
+            unique_list.append(x)
+
+
+def get_unique_bssid(input_list):
+    unique_bssid = []
+
+    for bssid in input_list:
+        if bssid in unique_bssid:
+            continue
+        else:
+            unique_bssid.append(bssid)
+    return unique_bssid
+
+
+def log_bssid(uniq_bssid):
+    bssid_file = open('unique_bssid.txt', 'at')
+    bssid_file.write(uniq_bssid)
+    bssid_file.close()
+
 
 
 def top_networks(show_top, scan):
@@ -48,6 +76,10 @@ def end_scan_line(scan_int):
 scan = nic.scan()
 #top_networks(10, scan)
 #total_networks_found(scan)
-bssid_uniq = create_bssid_list(scan)
-print(bssid_uniq)
+bssid_list = create_bssid_list(scan)
+#print(bssid_list)
+uniq_bssid = get_unique_bssid(bssid_list)
+print(uniq_bssid)
+log_bssid(uniq_bssid)
+
 end_scan_line(2)
