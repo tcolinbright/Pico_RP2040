@@ -1,3 +1,13 @@
+'''
+Updated logging.
+Updated terminal output to include number of stations read in from file.
+Add check for file(s), pass if not found.
+Bonus to print the size of the file.
+Bonus to add counter for new stations added since last scan
+
+'''
+
+
 import network
 import binascii
 import time
@@ -102,18 +112,15 @@ def end_scan_line(scan_int):
     print("\n*********\n")
     time.sleep(scan_int)
 
-def read_in_list(input_file):
+def read_in_list(input_file, delim):
     my_file = open(input_file, "r")
   
     # reading the file
     data = my_file.read()
   
-    # replacing end splitting the text 
-    # when newline ('\n') is seen.
-    unique_bssid = data.split(",")
-    print(unique_bssid)
+    new_list = data.split(delim)
     my_file.close()
-    return unique_bssid
+    return new_list
 
 # Start Here #
 
@@ -121,8 +128,11 @@ unique_bssid = [] # Create empty list of bssid's
 unique_ssid = [] # Create empty list of SSID's
 
 #read_in_list('unique_bssid.csv')
-previously_collected_bssid = len(read_in_list('unique_bssid.csv'))
+previously_collected_bssid = len(read_in_list('unique_bssid.csv', ","))
+previously_collected_ssid = len(read_in_list('unique_ssid.txt', '\n'))
 print(f'Imported {previously_collected_bssid} previously recorded BSSID')
+print(f'Imported {previously_collected_ssid} previously recorded SSID')
+print(f'\n\n*****    Scan Results    *****\n\n')
 
 while True:
     scan = nic.scan()
@@ -130,10 +140,10 @@ while True:
     bssid_list = create_bssid_list(scan)
     get_unique_bssid(bssid_list)
     
-    #ssid_list = create_ssid_list(scan)
-    #get_unique_ssid(ssid_list)
-    #networks = top_networks(n, scan)
-    #formatting(networks)
+    ssid_list = create_ssid_list(scan)
+    get_unique_ssid(ssid_list)
+    networks = top_networks(n, scan)
+    formatting(networks)
     end_scan_line(2)
 
 
