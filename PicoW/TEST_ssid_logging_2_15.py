@@ -1,8 +1,8 @@
 '''
-Updated logging.
-Updated terminal output to include number of stations read in from file.
+Condensed read-in statement
+
 Add check for file(s), pass if not found.
-Bonus to print the size of the file.
+
 Bonus to add counter for new stations added since last scan
 
 '''
@@ -152,12 +152,10 @@ def get_file_size(in_file):
 unique_ssid = [] # Create empty list of SSID's
 
 read_into_list(read_file_into_memory('unique_ssid.txt', "\n"), unique_ssid)
-
-# previously_collected_ssid = read_file_into_memory('unique_ssid.txt', '\n')
-# for ssid in previously_collected_ssid:
-#     unique_ssid.append(ssid)
-    
-previously_collected_ssids = len(read_file_into_memory('unique_ssid.txt', '\n'))
+# for item in unique_ssid:  #Use to verify list is being read in
+#     print(item)
+   
+previously_collected_ssids = len(unique_ssid)
 
 print(get_file_size('unique_ssid.txt'))
 print(f'Imported {previously_collected_ssids} previously recorded SSID')
@@ -174,4 +172,5 @@ while True:
     networks = top_networks(n, scan)
     formatting(networks)
     end_scan_line(2)
+
 
