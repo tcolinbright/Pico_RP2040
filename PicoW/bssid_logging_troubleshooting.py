@@ -11,6 +11,8 @@ Bonus to add counter for new stations added since last scan
 import network
 import binascii
 import time
+import os
+
 nic = network.WLAN(network.STA_IF)
 nic.active(True)
  
@@ -122,28 +124,44 @@ def read_in_list(input_file, delim):
     my_file.close()
     return new_list
 
+
+def get_file_size(in_file):
+    stats = os.stat(in_file)
+    size_kbytes = round((stats[6] / 1024), 2)
+    size_mbytes = size_kbytes / 1024
+    to_display = print(f'{in_file} size:\n{size_kbytes} KB   |   {size_mbytes} MB\n')
+    return to_display
+
+
+
 # Start Here #
 
-unique_bssid = [] # Create empty list of bssid's
-unique_ssid = [] # Create empty list of SSID's
-
+#unique_bssid = [] # Create empty list of bssid's
 #read_in_list('unique_bssid.csv')
-previously_collected_bssid = len(read_in_list('unique_bssid.csv', ","))
-previously_collected_ssid = len(read_in_list('unique_ssid.txt', '\n'))
-print(f'Imported {previously_collected_bssid} previously recorded BSSID')
-print(f'Imported {previously_collected_ssid} previously recorded SSID')
+#previously_collected_bssid = len(read_in_list('unique_bssid.csv', ","))
+#print(f'Imported {previously_collected_bssid} previously recorded BSSID')
+
+
+unique_ssid = [] # Create empty list of SSID's
+previously_collected_ssid = read_in_list('unique_ssid.txt', '\n')
+for ssid in previously_collected_ssid:
+    unique_ssid.append(ssid)
+    
+previously_collected_ssids = len(read_in_list('unique_ssid.txt', '\n'))
+
+print(get_file_size('unique_ssid.txt'))
+print(f'Imported {previously_collected_ssids} previously recorded SSID')
 print(f'\n\n*****    Scan Results    *****\n\n')
 
 while True:
     scan = nic.scan()
     total_networks_found(scan)
-    bssid_list = create_bssid_list(scan)
-    get_unique_bssid(bssid_list)
+    #bssid_list = create_bssid_list(scan)
+    #get_unique_bssid(bssid_list)
     
     ssid_list = create_ssid_list(scan)
     get_unique_ssid(ssid_list)
     networks = top_networks(n, scan)
     formatting(networks)
     end_scan_line(2)
-
 
