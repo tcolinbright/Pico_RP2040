@@ -26,7 +26,7 @@ def total_networks_found(scan):
     print(f'Total Networks Found: {networks_found}\n')
     return networks_found
 
-def create_bssid_list(scan):
+#def create_bssid_list(scan):
     bssid_list_full = []
     networks = scan
     for net in networks:
@@ -41,7 +41,7 @@ def create_bssid_list(scan):
     return bssid_list_full
 
 
-def get_unique_bssid(input_list):
+#def get_unique_bssid(input_list):
     for bssid in input_list:
         if bssid in unique_bssid:
             continue
@@ -67,6 +67,7 @@ def create_ssid_list(scan):
     return ssid_list_full
 
 
+''' Checks Scaned SSID's against already collected. '''
 def get_unique_ssid(input_list):
     for ssid in input_list:
         if ssid in unique_ssid:
@@ -78,9 +79,10 @@ def get_unique_ssid(input_list):
             ssid_txt.close()
 
 
+'''Sorts networks by dbm reading and returns the top n amount of them'''
 def top_networks(show_top, scan):
-    '''Sorts networks by dbm reading and returns the top n amount of them'''
     
+    '''Return element from list to sort'''
     def sort_by_dbm(e):
         return e[3]
     
@@ -89,6 +91,8 @@ def top_networks(show_top, scan):
     networks = networks[0:show_top]
     return networks
 
+
+'''    Format Terminal Output     '''
 def formatting(scan_output):
     for net in scan_output:
         
@@ -106,6 +110,7 @@ def formatting(scan_output):
         bssid = str(binascii.hexlify(net[1], ":")) #changes hex to normal numbers
         bssid = bssid.replace("b'", "")
         bssid = bssid.replace("'","")
+        bssid = bssid.upper()
        
         print(f'SSID: {ssid}\nBSSID: {bssid} | CH: {channel}  | Dbm: {dbm}\n\n-------------------\n')
 
@@ -113,6 +118,9 @@ def formatting(scan_output):
 def end_scan_line(scan_int):
     print("\n*********\n")
     time.sleep(scan_int)
+
+
+'''    Utility Functions     '''
 
 
 def read_into_list(in_list, append_list):
@@ -131,17 +139,16 @@ def read_file_into_memory(input_file, delim):
     return new_list
 
 
-
 def get_file_size(in_file):
     stats = os.stat(in_file)
     size_kbytes = round((stats[6] / 1024), 2)
-    size_mbytes = size_kbytes / 1024
+    size_mbytes = round((size_kbytes / 1024), 2)
     to_display = print(f'{in_file} size:\n{size_kbytes} KB   |   {size_mbytes} MB\n')
     return to_display
 
 
 
-# Start Here #
+''' Start Here '''
 
 #unique_bssid = [] # Create empty list of bssid's
 #read_in_list('unique_bssid.csv')
@@ -151,26 +158,22 @@ def get_file_size(in_file):
 
 unique_ssid = [] # Create empty list of SSID's
 
-read_into_list(read_file_into_memory('unique_ssid.txt', "\n"), unique_ssid)
-# for item in unique_ssid:  #Use to verify list is being read in
-#     print(item)
+read_into_list(read_file_into_memory('unique_ssid.txt', "\n"), unique_ssid) # Reads .txt file in line by line into a new list
    
-previously_collected_ssids = len(unique_ssid)
+previously_collected_ssids = len(unique_ssid) # Get a count of the entries in .txt
 
 print(get_file_size('unique_ssid.txt'))
 print(f'Imported {previously_collected_ssids} previously recorded SSID')
 print(f'\n\n*****    Scan Results    *****\n\n')
 
 while True:
-    scan = nic.scan()
-    total_networks_found(scan)
-    #bssid_list = create_bssid_list(scan)
+    scan = nic.scan() #Conducts built in scan to return a list of tuples
+    total_networks_found(scan) #Counts the number of entries
+    #bssid_list = create_bssid_list(scan) 
     #get_unique_bssid(bssid_list)
     
-    ssid_list = create_ssid_list(scan)
-    get_unique_ssid(ssid_list)
-    networks = top_networks(n, scan)
-    formatting(networks)
-    end_scan_line(2)
-
-
+    ssid_list = create_ssid_list(scan) #Create list of SSID's from scan
+    get_unique_ssid(ssid_list) #Compare against stored list add if not present
+    networks = top_networks(n, scan) #Sort the entire list of networks by dbm strength
+    formatting(networks) #Formats output for reading in terminal
+    end_scan_line(2) #Simple line of stars to endicate end of cycle and control time between scans
