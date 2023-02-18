@@ -61,6 +61,7 @@ def create_ssid_list(scan):
 
 
 def log_unique(input_list, check_against_list, append_to_file):
+    '''Compares input_list to check_against list. If not present it appends to append_to_file'''
     for item in input_list:
         if item in check_against_list:
             continue
@@ -140,7 +141,8 @@ def get_file_size(in_file): #NeedFix: return sizes as value strings
     size_kbytes = round((stats[6] / 1024), 2)
     size_mbytes = size_kbytes / 1024
     to_display = print(f'{in_file} size:\n{size_kbytes} KB   |   {size_mbytes} MB\n')
-    return to_display
+    KB, MB = size_kbytes, size_mbytes
+    return KB, MB
 
 
 def blink_onboard_led_constant(num_blinks):
@@ -150,6 +152,7 @@ def blink_onboard_led_constant(num_blinks):
         time.sleep(.1)
         led.off()
         time.sleep(.1)
+
 
 # Start Here #
 blink_onboard_led_constant(5)
@@ -174,15 +177,14 @@ while True:
         if logging = True, any new SSIDs not found in imported list.
         LED blinks after each succesful scan+logging cycle to indicate operation
         For 2 sec after LED blinks, the pico sleeps. Good time to unplug.'''
-    scan = nic.scan()
-    total_networks_found(scan)
-    networks = top_networks(n, scan, 3, True)
+    scan = nic.scan() # Scan for broadcast
+    total_networks_found(scan) # Display number of stations picked up
+    networks = top_networks(n, scan, 3, True) #get top n amount of networks based on dbm
     formatting(networks)
     if logging == True:
         #bssid_list = create_bssid_list(scan)
         #log_unique(bssid_list, unique_bssid, 'unique_bssid.txt')
         ssid_list = create_ssid_list(scan)
-        #get_unique_ssid(ssid_list)
         log_unique(ssid_list, unique_ssid, 'unique_ssid.txt')
     else:
         pass
