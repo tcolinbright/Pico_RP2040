@@ -28,13 +28,13 @@ def total_networks_found(scan):
     return number_of_networks_found
 
 
-def create_bssid_list(scan):
+#def create_bssid_list(scan):
     ''' Format/convert and return list of BSSIDs'''
     bssid_list_full = []
     networks = scan
     for net in networks:
     
-        bssid = str(binascii.hexlify(net[1], ":")) #changes hex to normal numbers
+        bssid = str(binascii.hexlify(net[1], ":")) #changes bytes to hex
         bssid = bssid.replace("b'", "")
         bssid = bssid.replace("'","")
         bssid_list_full.append(bssid)
@@ -43,18 +43,7 @@ def create_bssid_list(scan):
     print(f'Discovered {total_aps} Access Points\n')
     return bssid_list_full
 
-
-#def get_unique_bssid(input_list):
-#     for bssid in input_list:
-#         if bssid in unique_bssid:
-#             continue
-#         else:
-#             unique_bssid.append(bssid)
-#             bssid_csv = open(r'unique_bssid.csv', 'at')
-#             bssid_csv.write(f'{bssid},')
-#             bssid_csv.close()
-    
-
+ 
 def create_ssid_list(scan):
     '''Formats SSIDs from scan results. Returns list of all SSIDs'''
     ssid_list_full = []
@@ -71,27 +60,32 @@ def create_ssid_list(scan):
     return ssid_list_full
 
 
-def get_unique_ssid(input_list):
-    '''Checks input list against stored list. Appends to list if not present.'''
-    for ssid in input_list:
-        if ssid in unique_ssid:
+def log_unique(input_list, check_against_list, append_to_file):
+    for item in input_list:
+        if item in check_against_list:
             continue
         else:
-            unique_ssid.append(ssid)
-            # ssid_txt = open(r'unique_ssid.txt', 'at')
-            # ssid_txt.write(f'{ssid}\n')
-            # ssid_txt.close()
-            append_to_file(ssid, "unique_ssid.txt", "\n") #Testing this function to condense lines of code
+            check_against_list.append(item) # Save to current list so it doesn't multi record
+            append_to_file(item, append_to_file, "\n")
 
-
-def top_networks(show_top, scan):
-    '''Sorts networks by dbm reading and returns the top n amount of them'''
+def top_networks(show_top, scan, list_item_number, sort_desc):
+    '''Sorts networks by list_item_number reading and returns the top n amount of them
+    show_top = number of item to return like top 5
+    scan = the nic.scan() output
+    list_item_number = positional number in list. 
+        0: SSID
+        1: BSSID (bytes in raw output)
+        2: Channel
+        3: Decible
+        4. Security (FLAWED)
+        5: Hidden 1 = True | 2 = False
+    sort_desc = sort in reverse order True/False'''
     
-    def sort_by_dbm(e):
-        return e[3]
+    def sort_by(e):
+        return e[list_item_number]
     
     networks = scan
-    networks.sort(key=sort_by_dbm, reverse=True) 
+    networks.sort(key=sort_by, reverse=sort_desc) 
     networks = networks[0:show_top]
     return networks
 
@@ -102,7 +96,7 @@ def formatting(scan_output):
         ssid = str(net[0])
         channel = net[2]
         dbm = net[3]
-        #security = str(net[4])
+        #security = str(net[4]) #Outputs are inaccurate
         
         if ssid == "b''":
             ssid = "Hidden"
@@ -134,6 +128,7 @@ def read_file_into_memory(input_file, delim):
 
 def append_to_file(item_to_append, to_file, delim):
     '''Takes item_to_append and appends it to_file, splitting on delim'''
+    item_to_append = str(item_to_append)
     _txt = open(to_file, 'at')
     _txt.write(f'{item_to_append}{delim}')
     _txt.close()
@@ -181,13 +176,14 @@ while True:
         For 2 sec after LED blinks, the pico sleeps. Good time to unplug.'''
     scan = nic.scan()
     total_networks_found(scan)
-    networks = top_networks(n, scan)
+    networks = top_networks(n, scan, 3, True)
     formatting(networks)
     if logging == True:
         #bssid_list = create_bssid_list(scan)
-        #get_unique_bssid(bssid_list)
+        #log_unique(bssid_list, unique_bssid, 'unique_bssid.txt')
         ssid_list = create_ssid_list(scan)
-        get_unique_ssid(ssid_list)
+        #get_unique_ssid(ssid_list)
+        log_unique(ssid_list, unique_ssid, 'unique_ssid.txt')
     else:
         pass
     
