@@ -1,6 +1,7 @@
 '''
-blink Led
-optional logging added
+removed read_into_list because it was pointless
+Added more comments to functions
+
 ##### Compare with other versions and clean up repo  ########
 
 '''
@@ -122,15 +123,6 @@ def end_scan_line(scan_int):
     time.sleep(scan_int)
 
 
-#def read_into_list(in_list, append_list): #Was redundant. Add to utility class
-#     '''Take items from in_list and append to append_list. Returns new combined list.'''
-#     input_list = in_list
-#     output_list = append_list
-#     for item in input_list:
-#         append_list.append(item)
-#     return output_list
-
-
 def read_file_into_memory(input_file, delim):
     '''Reads file into a list splitting on delim. Returns list'''
     my_file = open(input_file, "r") # this is the file to read
@@ -167,18 +159,26 @@ def blink_onboard_led_constant(num_blinks):
 # Start Here #
 blink_onboard_led_constant(5)
 
+'''This can be uncommented for logging. Currently needs to have 'unique_bssid.txt' already saved to pico'''
 #unique_bssid = read_file_into_memory('unique_bssid.txt', "\n") 
 #previously_collected_bssid = len(unique_bssid) - 1
 #print(f'Imported {previously_collected_bssid} previously recorded BSSID')
 
+'''Read in text.txt to a list. Return number of items imported'''
 unique_ssid = read_file_into_memory('unique_ssid.txt', "\n")  
 previously_collected_ssids = len(unique_ssid) - 1 # -1 accounts for \n character
 
+'''Output to display File Size + Number of imported items + title to distinguish results'''
 get_file_size('unique_ssid.txt')
 print(f'Imported {previously_collected_ssids} previously recorded SSID')
 print(f'\n\n*****    Scan Results    *****\n\n')
 
+
 while True:
+    '''Scans network, returns top results based on dbm, outputs to terminal, and logs
+        if logging = True, any new SSIDs not found in imported list.
+        LED blinks after each succesful scan+logging cycle to indicate operation
+        For 2 sec after LED blinks, the pico sleeps. Good time to unplug.'''
     scan = nic.scan()
     total_networks_found(scan)
     networks = top_networks(n, scan)
@@ -191,8 +191,9 @@ while True:
     else:
         pass
     
-    end_scan_line(2)
     blink_onboard_led_constant(1)
+    end_scan_line(2)
+    
 
 
 
