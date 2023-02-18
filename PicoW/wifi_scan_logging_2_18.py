@@ -1,9 +1,11 @@
 '''
-removed read_into_list because it was pointless
-Added more comments to functions
+##### Logging Requirements ####
+To log you will need to already have saved on Pi Pico:
+- unique_bssid.txt
+- unique_ssid.txt
+based on what you want to log.
 
-##### Compare with other versions and clean up repo  ########
-
+Remember theres not much memory on the little Pico.
 '''
 
 
@@ -90,6 +92,7 @@ def top_networks(show_top, scan, list_item_number, sort_desc):
     networks = networks[0:show_top]
     return networks
 
+
 def formatting(scan_output):
     '''Formats output to display in terminal'''
     for net in scan_output:
@@ -136,11 +139,11 @@ def append_to_file(item_to_append, to_file, delim):
 
 
 def get_file_size(in_file): #NeedFix: return sizes as value strings
-    '''Prints file size to terminal'''
+    '''Prints file size to terminal, returns file size value in KB and MB'''
     stats = os.stat(in_file)
     size_kbytes = round((stats[6] / 1024), 2)
     size_mbytes = size_kbytes / 1024
-    to_display = print(f'{in_file} size:\n{size_kbytes} KB   |   {size_mbytes} MB\n')
+    print(f'{in_file} size:\n{size_kbytes} KB   |   {size_mbytes} MB\n')
     KB, MB = size_kbytes, size_mbytes
     return KB, MB
 
@@ -155,14 +158,14 @@ def blink_onboard_led_constant(num_blinks):
 
 
 # Start Here #
-blink_onboard_led_constant(5)
+blink_onboard_led_constant(5) #Flash to aknowledge boot
 
-'''This can be uncommented for logging. Currently needs to have 'unique_bssid.txt' already saved to pico'''
+'''This can be uncommented for logging BSSIDs. Currently needs to have 'unique_bssid.txt' already saved to pico.'''
 #unique_bssid = read_file_into_memory('unique_bssid.txt', "\n") 
 #previously_collected_bssid = len(unique_bssid) - 1
 #print(f'Imported {previously_collected_bssid} previously recorded BSSID')
 
-'''Read in text.txt to a list. Return number of items imported'''
+'''Read in input_file.txt to a list. Return number of items imported'''
 unique_ssid = read_file_into_memory('unique_ssid.txt', "\n")  
 previously_collected_ssids = len(unique_ssid) - 1 # -1 accounts for \n character
 
@@ -175,11 +178,11 @@ print(f'\n\n*****    Scan Results    *****\n\n')
 while True:
     '''Scans network, returns top results based on dbm, outputs to terminal, and logs
         if logging = True, any new SSIDs not found in imported list.
-        LED blinks after each succesful scan+logging cycle to indicate operation
+        LED blinks after each succesful scan+logging cycle to indicate operation.
         For 2 sec after LED blinks, the pico sleeps. Good time to unplug.'''
     scan = nic.scan() # Scan for broadcast
     total_networks_found(scan) # Display number of stations picked up
-    networks = top_networks(n, scan, 3, True) #get top n amount of networks based on dbm
+    networks = top_networks(n, scan, 3, True) # Get top n amount of networks based on dbm
     formatting(networks)
     if logging == True:
         #bssid_list = create_bssid_list(scan)
