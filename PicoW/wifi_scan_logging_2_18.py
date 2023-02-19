@@ -80,7 +80,7 @@ def top_networks(show_top, scan, list_item_number, sort_desc):
         1: BSSID (bytes in raw output)
         2: Channel
         3: Decible
-        4. Security (FLAWED)
+        4: Security (FLAWED)
         5: Hidden 1 = True | 2 = False
     sort_desc = sort in reverse order True/False'''
     
