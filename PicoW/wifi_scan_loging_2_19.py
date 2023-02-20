@@ -31,19 +31,19 @@ def total_networks_found(scan):
 
 
 #def create_bssid_list(scan):
-    ''' Format/convert and return list of BSSIDs'''
-    bssid_list_full = []
-    networks = scan
-    for net in networks:
-    
-        bssid = str(binascii.hexlify(net[1], ":")) #changes bytes to hex
-        bssid = bssid.replace("b'", "")
-        bssid = bssid.replace("'","")
-        bssid_list_full.append(bssid)
-    
-    total_aps = len(bssid_list_full)
-    print(f'Discovered {total_aps} Access Points\n')
-    return bssid_list_full
+#     ''' Format/convert and return list of BSSIDs'''
+#     bssid_list_full = []
+#     networks = scan
+#     for net in networks:
+#     
+#         bssid = str(binascii.hexlify(net[1], ":")) #changes bytes to hex
+#         bssid = bssid.replace("b'", "")
+#         bssid = bssid.replace("'","")
+#         bssid_list_full.append(bssid)
+#     
+#     total_aps = len(bssid_list_full)
+#     print(f'Discovered {total_aps} Access Points\n')
+#     return bssid_list_full
 
  
 def create_ssid_list(scan):
@@ -61,14 +61,14 @@ def create_ssid_list(scan):
     return ssid_list_full
 
 
-def log_unique(input_list, check_against_list, append_to_file):
+def log_unique(input_list, check_against_list, append_to_this_file):
     '''Compares input_list to check_against list. If not present it appends to append_to_file'''
     for item in input_list:
         if item in check_against_list:
             continue
         else:
             check_against_list.append(item) # Save to current list so it doesn't multi record
-            append_to_file(item, append_to_file, "\n")
+            append_to_file(item, append_to_this_file, "\n")
 
 def top_networks(show_top, scan, list_item_number, sort_desc):
     '''Sorts networks by list_item_number reading and returns the top n amount of them
@@ -193,6 +193,7 @@ while True:
     blink_onboard_led_constant(1)
     end_scan_line(2)
     
+
 
 
 
