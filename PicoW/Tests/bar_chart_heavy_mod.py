@@ -8,19 +8,17 @@ import time
 import os
 
 
-def scan_for(bssid_in, scan):
-    for net in scan:
+def scan_for(bssid_in, in_scan):
+    for net in in_scan:
         ssid = str(net[0].decode('utf-8'))
         bssid = str(binascii.hexlify(net[1], ":").decode('utf-8'))
         bssid = bssid.upper()
         dbm = net[3]
-        
         if bssid == bssid_in:
             dbm_recording.append(dbm)
         else:
             pass
-    if bssid_in not in scan:
-        dbm = 0
+
 
 def trim_list(list_name, limit):
     if len(list_name) > limit:
@@ -66,11 +64,13 @@ def top_networks(show_top, scan, list_item_number, sort_desc):
 def scan_cycle(tgt_bssid):
     while True:
         scan = nic.scan()
-        trim_list(dbm_recording, 3)
-        scan_for(tgt_bssid, scan)
+        networks = top_networks(n, scan, 3, True)
+        trim_list(dbm_recording, 1)
+        scan_for(tgt_bssid, networks)
         simple_barchart(dbm_recording)
         time.sleep(1)
         #print(dbm_recording)
+
 
 def formatting(scan_output):
     '''Formats output to display in terminal'''
@@ -111,10 +111,12 @@ dbm_recording = [0,]
 
 user_selection = int(input("Select which station to scan: "))
 tgt_net = networks[user_selection]
+
 tgt_bssid = str(binascii.hexlify(tgt_net[1], ":").decode('utf-8')) #changes hex to normal numbers
 tgt_bssid = tgt_bssid.upper()
 
 
 scan_cycle(tgt_bssid)
+
 
 
