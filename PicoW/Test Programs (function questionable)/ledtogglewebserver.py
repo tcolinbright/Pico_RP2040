@@ -11,8 +11,8 @@ ledState = 'LED State Unknown'
 
 button = Pin(16, Pin.IN, Pin.PULL_UP)
 
-ssid = 'Astronomy Tower'
-password = 'LemonDrop62442'
+ssid = 'SSID'
+password = 'PASSWORD'
 
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
