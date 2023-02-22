@@ -9,16 +9,20 @@ nic = network.WLAN(network.STA_IF)
 nic.active(True)
 
 def scan_for(bssid_in):
+    bssid_scanned = []
     for net in scan:
         ssid = str(net[0].decode('utf-8'))
         bssid = str(binascii.hexlify(net[1], ":").decode('utf-8'))
         bssid = bssid.upper()
         dbm = net[3]
+        bssid_scanned.append(bssid)
         
-        if bssid == bssid_in:
-            dbm_recording.append(dbm)
-        else:
-            pass
+    if bssid_in in bssid_scanned:
+        dbm_recording.append(dbm)
+        print(dbm_recording)
+    else:
+        dbm_recording.append(0)
+        pass
 
 
 def trim_list(list_name, limit):
@@ -42,7 +46,7 @@ def simple_barchart(in_list):
 
 dbm_recording = [0,]
 
-tgt_bssid = "00:71:C2:6F:5A:80"
+tgt_bssid = "EA:CB:BC:97:86:CF"
 
 while True:
     scan = nic.scan()
@@ -50,5 +54,6 @@ while True:
     scan_for(tgt_bssid)
     simple_barchart(dbm_recording)
     time.sleep(2)
+
 
 
