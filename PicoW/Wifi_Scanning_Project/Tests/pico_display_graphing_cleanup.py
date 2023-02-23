@@ -30,16 +30,20 @@ dbms = []
 
 def dbm_to_list(scan, bssid_in):
     '''Filter scan for BSSID and log dbm to list'''
+    bssid_scanned = []
     networks = scan
     for net in networks:
-        bssid = str(binascii.hexlify(net[1], ":")) #changes bytes to hex
-        bssid = bssid.replace("b'", "")
-        bssid = bssid.replace("'","")
-        dbm = str(net[3])
-        if bssid == bssid_in:
-            dbms.append(dbm)
-        else:
-            print(f'{bssid_in} not located...')
+        bssid = str(binascii.hexlify(net[1], ":").decode('utf-8')) #changes bytes to hex
+        bssid = bssid.upper()
+        dbm = net[3]
+        bssid_scanned.append(bssid)
+    if bssid_in in bssid_scanned:
+        dbms.append(dbm)
+        print(dbms)
+    else:
+        dbms.append(0)
+        pass
+
 
 scan_this_one = ""
 
@@ -51,24 +55,22 @@ while True:
     display.set_pen(BLACK)
     display.clear()
 
-    # the following two lines do some maths to convert the number from the temp sensor into celsius
-    #Append to list of dbms here
 
-    #temperatures.append(temperature)
-
-    # shifts the temperatures history to the left by one sample
+    # shifts the dbms history to the left by one sample
     if len(dbms) > WIDTH // bar_width:
         dbms.pop(0)
 
     i = 0
 
     for dbm in dbms:
-        # chooses a pen colour based on the temperature
-        DBM_COLOUR = BLACK
+        dbm_bar = (100 - abs(dbm))
+       
+        # chooses a pen colour
+        DBM_COLOUR = GREEN
         display.set_pen(DBM_COLOUR)
 
         # draws the reading as a tall, thin rectangle
-        display.rectangle(i, HEIGHT - (round(dbm) * 4), bar_width, HEIGHT)
+        display.rectangle(i, HEIGHT - (round(dbm_bar) * 4), bar_width, HEIGHT)
 
         # the next tall thin rectangle needs to be drawn
         # "bar_width" (default: 5) pixels to the right of the last one
@@ -81,7 +83,7 @@ while True:
 
     # writes the reading as text in the white rectangle
     display.set_pen(BLACK)
-    #display.text("{:.2f}".format(dbm) + "c", 3, 3, 0, 3)
+    display.text(f'dbm: {dbm}', 3, 3, 0, 3)
 
     # time to update the display
     display.update()
