@@ -138,9 +138,10 @@ try:
     client = mqtt_connect()
 except OSError as e:
     reconnect()
+```
 
 Loop forever, reading temperature and humidity data from the DHT22 sensor, converting it to a JSON string, and publishing it to the specified MQTT topic.
-```
+
 
 ```python
 while True:
