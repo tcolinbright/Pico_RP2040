@@ -64,10 +64,7 @@ while True:
     i = 0
 
     for dbm in dbms:
-        if dbm == 0:
-            dbm_bar = 0
-        else: 
-            dbm_bar = (100 - abs(dbm))
+        dbm_bar = (100 - abs(dbm))
        
         # chooses a pen colour
         DBM_COLOUR = GREEN
@@ -83,11 +80,7 @@ while True:
 
     # draws a white background for the text
     display.set_pen(WHITE)
-    display.rectangle(1, 1, 160, 40)
-
-    # draws a white background for the text
-    display.set_pen(WHITE)
-    display.text('BSSID: ', 170, 3, scale=4)
+    display.rectangle(1, 1, 155, 40)
 
     # writes the reading as text in the white rectangle
     dbm = dbms[-1]
