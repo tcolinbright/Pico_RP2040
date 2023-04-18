@@ -123,7 +123,16 @@ Note: In the paramaters of MQTTClient(ssl_params=) in this case is the same as t
 
 ```python
 def mqtt_connect():
-    client = MQTTClient(client_id, mqtt_server, port, user=username, password=password, keepalive=3600, ssl=True, ssl_params={'server_hostname':'server_addr'})
+    client = MQTTClient(client_id,
+                         mqtt_server, 
+                         port, 
+                         user=username, 
+                         password=password, 
+                         keepalive=3600, 
+                         ssl=True, 
+                         ssl_params={'server_hostname':'server_addr'}
+                         )
+    
     client.connect()
     print('Connected to %s MQTT Broker'%(mqtt_server))
     return client
