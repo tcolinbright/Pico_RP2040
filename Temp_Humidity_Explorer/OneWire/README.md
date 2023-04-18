@@ -63,7 +63,9 @@ roms = ds.scan()
 The program defines three functions:
 
 ```read_dht()```: This function reads the temperature value from the DHT22 sensor by calling the measure() method, which takes a reading and stores the temperature and humidity values internally. It then retrieves the temperature value in Celsius using the temperature() method and returns it.
+
 ```c2f()```: This function takes a temperature value in Celsius as an argument and converts it to Fahrenheit using the formula (Celsius * (9/5)) + 32. It then returns the converted value.
+
 ```probe_read()```: This function reads the temperature value from the DS18B20 probe by calling the ```convert_temp()``` method to start a temperature conversion, waiting for the conversion to complete using the ```time.sleep_ms()``` method, and then calling the ```read_temp()``` method to retrieve the converted temperature value. It then returns the temperature value in Celsius.
 
 ```python
