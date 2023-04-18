@@ -130,7 +130,7 @@ def mqtt_connect():
                          password=password, 
                          keepalive=3600, 
                          ssl=True, 
-                         ssl_params={'server_hostname':'server_addr'}
+                         ssl_params={'server_hostname':f'{mqtt_server}'}
                          )
     
     client.connect()
