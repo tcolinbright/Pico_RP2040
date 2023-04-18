@@ -89,15 +89,18 @@ Connect to the Wi-Fi network using the specified SSID and password.
 ```python
 ssid = "SSID"
 password = "Wifi_Pass"
+
 station = network.WLAN(network.STA_IF)
 print(f'Attempting to Connect to:  {ssid}')
 station.active(True)
+
 try:
     station.connect(ssid, password)
 except OSError as e:
     print(e)
 while not station.isconnected():
     time.sleep(1)
+
 print("Connected to WiFi")
 print(station.ifconfig())
 ```
