@@ -37,7 +37,7 @@ root.title("Troubleshooting Log Entry Program")
 text_label = tk.Label(root, text="Enter troubleshooting step:")
 
 # Initialize the text input box
-text_input = tk.Entry(root, width=75)
+text_input = tk.Entry(root, width=450)
 
 # Pack the label and text input box into the window
 text_label.pack()
