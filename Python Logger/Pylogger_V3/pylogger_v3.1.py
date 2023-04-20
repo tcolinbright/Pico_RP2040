@@ -13,7 +13,11 @@ def append_to_log_file(event=None):
 
 # Function to read the contents of the log file and display them in the Text widget
 def display_log_contents():
-    with open(get_log_file_path(), "r") as file:
+    log_file_path = get_log_file_path()
+    if not os.path.exists(log_file_path):
+        with open(log_file_path, 'w') as f:
+            pass
+    with open(log_file_path, "r") as file:
         log_contents = file.readlines()
     log_contents.reverse()
     log_text.delete(1.0, tk.END)
