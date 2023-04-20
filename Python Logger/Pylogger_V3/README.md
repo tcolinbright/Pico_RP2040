@@ -1,4 +1,4 @@
-# Documentation for Troubleshooting Log Entry Program
+# Documentation for pylogger_V3.1
 
 ## Introduction:
 The Troubleshooting Log Entry Program is a Python program designed to allow users to enter and save troubleshooting steps in a log file for future reference. This program uses the Tkinter library to create a simple graphical user interface (GUI) that includes an entry box for the user to enter the troubleshooting step, a button to submit the entry to the log file, and a text box to display the contents of the log file.
