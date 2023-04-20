@@ -1,15 +1,15 @@
-import machine import Pin
+from machine import Pin
 import onewire, ds18x20
 import time
 
 # Set the GPIO pins for the LEDs and temperature probe
-green_led_pin = 4
-red_led_pin = 5
+green_led_pin = 9
+red_led_pin = 22
 temp_probe_pin = 2
 
 # Set the minimum and maximum temperature values in Celsius
-MIN_TEMP = 20
-MAX_TEMP = 30
+MIN_TEMP = 37.0
+MAX_TEMP = 38.0
 
 # Initialize the temperature probe
 dat = Pin(temp_probe_pin)
@@ -25,6 +25,7 @@ while True:
     ds_sensor.convert_temp()
     time.sleep_ms(750)
     temp_c = ds_sensor.read_temp(roms[0])
+    print(temp_c)
     
     # Check if the temperature is above or below the threshold values
     if temp_c < MIN_TEMP or temp_c > MAX_TEMP:
