@@ -2,3 +2,4 @@
 PicoW/Tests/test_file.txt
 Temp_Humidity_Explorer/json_dht_mqtt.py
 logs/2023-04-20.txt
+pico_weather_api.py
