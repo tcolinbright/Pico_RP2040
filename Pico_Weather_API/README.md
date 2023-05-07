@@ -13,9 +13,9 @@ This project uses the OpenWeather API and a Raspberry Pi Pico to display real-ti
 ## Installation
 
 1. Clone the repository to your local machine.
-1. Open the wifi_creds.py file and enter your WiFi credentials.
-1. Open the main.py file and enter your OpenWeather API key.
-1. In main.py, change locations to your desired locations.
+1. Open the ```wifi_creds.py``` file and enter your WiFi credentials.
+1. Open the ```weather_api_picod2.py``` file and enter your OpenWeather API key.
+1. Change locations to your desired locations.
     ```python
     # Set the latitude and longitude for the location you want to get the weather for
     locations = [
@@ -28,8 +28,9 @@ This project uses the OpenWeather API and a Raspberry Pi Pico to display real-ti
     ```
     Note: Will cycle through in order. You can add/subtract as desired.
 
-1. Connect the PicoDisplay2 to your Raspberry Pi Pico.
-1. Save main.py file to the Raspberry Pi Pico using Thonny.
+1. Connect the PicoDisplay2 to your Raspberry Pi Pico W.
+1. Save ```wifi_creds.py``` and ```weather_api_picod2.py``` to the Raspberry Pi Pico using Thonny.
+1. Change ```weather_api_picod2.py``` to ```main.py``` so it will run on boot.
 
 ## Usage
 
