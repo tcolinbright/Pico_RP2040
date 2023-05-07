@@ -8,8 +8,6 @@ from pimoroni import RGBLED
 from picographics import PicoGraphics, DISPLAY_PICO_DISPLAY_2
 
 
-
-
 # Setup Display
 dp = PicoGraphics(display=DISPLAY_PICO_DISPLAY_2)
 dp.set_font("bitmap8")
@@ -38,7 +36,6 @@ locations = [
 ]
 
 
-
 # Connect to your local WiFi network
 wifi = network.WLAN(network.STA_IF)
 wifi.active(True)
@@ -52,17 +49,18 @@ while not wifi.isconnected():
 # Connect to NTP server to get current time
 ntptime.settime()
 
+
 def get_weather(latitude, longitude, api_key):
     url = f"https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&units=imperial&appid={api_key}"
     response = urequests.get(url)
     data = ujson.loads(response.text)
-    print(data)
-    return data
 
-    # Check if the API call was successful
-    if response.status_code != 200:
-        print("Error: API call failed")
-        exit()
+    if response.status_code == 200:
+        #print(data) # Check API Response in terminal
+        return data
+    else:
+        raise Exception("Error: API call failed")
+
 
 
 # Extract the relevant information from the JSON response
@@ -77,10 +75,12 @@ def parse(data):
     return temperature, feels_like, humidity, wind_speed, wind_dir, description
 
 
+# Convert Wind Direction Degrees to Cardinal Directions
 def wind_direction(degrees):
     cardinal_directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
     idx = int(round((degrees % 360) / (360. / len(cardinal_directions))))
     return cardinal_directions[idx % len(cardinal_directions)]
+
 
 # Get Date and Time
 def time_parse(local_time):
@@ -93,12 +93,10 @@ def time_parse(local_time):
     weekday = local_time[6]
     yearday = local_time[7]
     
-    
     local_clock = f"{hour:02}:{minute:02}"
     display_date = f"{month:02}-{mday:02}-{year}"
     
     return local_clock, display_date
-
 
 
 # To clear the display
@@ -108,18 +106,16 @@ def clear():
     dp.update()
 
 
-
 # Print the weather information
-def print_weather():
-    print(f"{location}, WA")
+def print_weather(location_name, temperature, feels_like, humidity, wind_speed, wind_card, cap_desc):
+    print(f"{location_name}")
     print(f"Temperature: {temperature} F")
     print(f"Feels Like: {feels_like} F")
     print(f"Humidity: {humidity} %")
-    print(f"Wind speed: {wind_speed} mph")
-    print(f"Description: {description}")
-    print(f"{cap_desc}")
+    print(f"Description: {cap_desc}")
     print(f"Wind Dir: {wind_dir} Deg")
     print(f"Wind Card: {wind_card}")
+    print(f"Wind speed: {wind_speed} mph")
     print()
    
     
@@ -161,6 +157,8 @@ def pico_display_update2(location_name, temperature, feels_like, humidity, wind_
     dp.text(f"{cap_desc}.", 80, 200, scale=2)
     dp.update() 
 
+
+# Loop through each location in locations list.
 while True:
     for location in locations:
         # Make the API call and parse the response
