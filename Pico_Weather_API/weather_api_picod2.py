@@ -1,5 +1,6 @@
 import urequests
-import utime
+import time
+import ntptime
 import ujson
 import network
 from wifi_creds import *
@@ -48,7 +49,8 @@ led.set_rgb(0,255,0)
 while not wifi.isconnected():
     pass
 
-
+# Connect to NTP server to get current time
+ntptime.settime()
 
 def get_weather(latitude, longitude, api_key):
     url = f"https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&units=imperial&appid={api_key}"
@@ -80,6 +82,24 @@ def wind_direction(degrees):
     idx = int(round((degrees % 360) / (360. / len(cardinal_directions))))
     return cardinal_directions[idx % len(cardinal_directions)]
 
+# Get Date and Time
+def time_parse(local_time):
+    year = local_time[0]
+    month = local_time[1]
+    mday = local_time[2]
+    hour = local_time[3]
+    minute = local_time[4]
+    second = local_time[5]
+    weekday = local_time[6]
+    yearday = local_time[7]
+    
+    
+    local_clock = f"{hour:02}:{minute:02}"
+    display_date = f"{month:02}-{mday:02}-{year}"
+    
+    return local_clock, display_date
+
+
 
 # To clear the display
 def clear():
@@ -102,48 +122,43 @@ def print_weather():
     print(f"Wind Card: {wind_card}")
     print()
    
-
+    
 #Display to screen:
-def pico_display_update():
+def pico_display_update2(location_name, temperature, feels_like, humidity, wind_speed, wind_card, cap_desc, lc, dd):
     clear()
     led.set_rgb(0,0,0)
+    
+    # Location
     dp.set_pen(GREEN)
-    dp.text(f"{location}, WA", 25, 20, scale=3)
-    dp.set_pen(RED)
-    dp.text(f"{temperature} F", 25, 65, scale=5)
-    dp.set_pen(CYAN)
-    dp.text(f"{humidity} %", 200, 65, scale=5)
-    dp.set_pen(YELLOW)
-    dp.text(f"Wind: {wind_card} @ {wind_speed} mph", 25, 125, scale=3)
+    dp.text(f"{location_name}", 25, 10, scale=3)
+    
+    # Date and Time
+    dp.set_pen(MAGENTA)
+    dp.text(f"{dd}", 195, 5, scale=2)
     dp.set_pen(WHITE)
-    dp.text(f"{cap_desc}.", 25, 175, scale=2)
-    dp.update()
+    dp.text(f"{lc}", 210, 30, scale=3)
     
-#Display to screen:
-def pico_display_update2(location_name, temperature, feels_like, humidity, wind_speed, wind_card, cap_desc):
-    clear()
-    led.set_rgb(0,0,0)
-    
-    dp.set_pen(GREEN)
-    dp.text(f"{location_name}", 45, 20, scale=3)
-    
+    # Temperature
     dp.set_pen(RED)
     #dp.text(f"{temperature} F", 225, 20, scale=3)
     dp.text("Feels Like:", 25, 65, scale=2)
     dp.text(f"{feels_like} F", 25, 95, scale=3)
     
+    # Humidity
     dp.set_pen(CYAN)
-    dp.text("Humidity", 190, 65, scale=2)
+    dp.text("Humidity:", 190, 65, scale=2)
     dp.text(f"{humidity} %", 200, 95, scale=3)
     
+    # Wind Speed and Direction
     dp.set_pen(YELLOW)
     dp.text("Wind Dir:", 25, 135, scale=2)
     dp.text(f"{wind_card}", 30, 160, scale=3)
     dp.text("Wind Speed:", 190, 135, scale=2)
     dp.text(f"{wind_speed} mph", 190, 160, scale=3)
     
+    # Sky Description
     dp.set_pen(WHITE)
-    dp.text(f"{cap_desc}.", 35, 200, scale=2)
+    dp.text(f"{cap_desc}.", 80, 200, scale=2)
     dp.update() 
 
 while True:
@@ -158,12 +173,18 @@ while True:
         # Convert wind_dir into cardinal direction
         wind_card = wind_direction(wind_dir)
         cap_desc = description.upper()
+        
+        # Get the date and time
+        UTC_OFFSET = -7 * 60 * 60  # Adjust time zone
+        current_local = time.localtime(time.time() + UTC_OFFSET)
+        lc, dd = time_parse(current_local)
 
         # Display on pico
-        pico_display_update2(location_name, temperature, feels_like, humidity, wind_speed, wind_card, cap_desc)
+        pico_display_update2(location_name, temperature, feels_like, humidity, wind_speed, wind_card, cap_desc, lc, dd)
         #print_weather(location_name, temperature, feels_like, humidity, wind_speed, wind_card, cap_desc)
 
         # Wait
-        utime.sleep(1500)
+        time.sleep(15)
+
 
 
