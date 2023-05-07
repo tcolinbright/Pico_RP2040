@@ -19,11 +19,23 @@ led.set_rgb(255,0,255)
 # Define some colors to use
 WHITE = dp.create_pen(255, 255, 255)
 BLACK = dp.create_pen(0, 0, 0)
-CYAN = dp.create_pen(0, 255, 255)
-MAGENTA = dp.create_pen(255, 0, 255)
-YELLOW = dp.create_pen(255, 255, 0)
-GREEN = dp.create_pen(0, 255, 0)
 RED = dp.create_pen(255, 0, 0)
+GREEN = dp.create_pen(0, 255, 0)
+BLUE = dp.create_pen(0, 0, 255)
+YELLOW = dp.create_pen(255, 255, 0)
+MAGENTA = dp.create_pen(255, 0, 255)
+CYAN = dp.create_pen(0, 255, 255)
+ORANGE = dp.create_pen(255, 165, 0)
+PINK = dp.create_pen(255, 192, 203)
+PURPLE = dp.create_pen(128, 0, 128)
+BROWN = dp.create_pen(165, 42, 42)
+GRAY = dp.create_pen(128, 128, 128)
+LIGHT_GRAY = dp.create_pen(211, 211, 211)
+DARK_GRAY = dp.create_pen(169, 169, 169)
+MAROON = dp.create_pen(128, 0, 0)
+OLIVE = dp.create_pen(128, 128, 0)
+TEAL = dp.create_pen(0, 128, 128)
+
 
 
 # Set the latitude and longitude for the location you want to get the weather for
@@ -124,37 +136,45 @@ def pico_display_update2(location_name, temperature, feels_like, humidity, wind_
     clear()
     led.set_rgb(0,0,0)
     
+    # Make it easier to adjust rows
+    r2y = 80
+    r3y = 110
+    r4y = 150
+    r5y = 175
+    r6y = 220
+    
     # Location
     dp.set_pen(GREEN)
     dp.text(f"{location_name}", 25, 10, scale=3)
     
     # Date and Time
-    dp.set_pen(MAGENTA)
-    dp.text(f"{dd}", 195, 5, scale=2)
+    dp.set_pen(ORANGE)
+    dp.text(f"{lc}", 210, 15, scale=5)
+    
     dp.set_pen(WHITE)
-    dp.text(f"{lc}", 210, 30, scale=3)
+    dp.text(f"{dd}", 25, 50, scale=2)
     
     # Temperature
-    dp.set_pen(RED)
+    dp.set_pen(CYAN)
     #dp.text(f"{temperature} F", 225, 20, scale=3)
-    dp.text("Feels Like:", 25, 65, scale=2)
-    dp.text(f"{feels_like} F", 25, 95, scale=3)
+    dp.text("Feels Like:", 25, r2y, scale=2)
+    dp.text(f"{feels_like} F", 25, r3y, scale=3)
     
     # Humidity
     dp.set_pen(CYAN)
-    dp.text("Humidity:", 190, 65, scale=2)
-    dp.text(f"{humidity} %", 200, 95, scale=3)
+    dp.text("Humidity:", 190, r2y, scale=2)
+    dp.text(f"{humidity} %", 200, r3y, scale=3)
     
     # Wind Speed and Direction
     dp.set_pen(YELLOW)
-    dp.text("Wind Dir:", 25, 135, scale=2)
-    dp.text(f"{wind_card}", 30, 160, scale=3)
-    dp.text("Wind Speed:", 190, 135, scale=2)
-    dp.text(f"{wind_speed} mph", 190, 160, scale=3)
+    dp.text("Wind Dir:", 25, r4y, scale=2)
+    dp.text(f"{wind_card}", 30, r5y, scale=3)
+    dp.text("Wind Speed:", 190, r4y, scale=2)
+    dp.text(f"{wind_speed} mph", 190, r5y, scale=3)
     
     # Sky Description
     dp.set_pen(WHITE)
-    dp.text(f"{cap_desc}.", 80, 200, scale=2)
+    dp.text(f"{cap_desc}", 80, r6y, scale=2)
     dp.update() 
 
 
@@ -183,6 +203,4 @@ while True:
 
         # Wait
         time.sleep(15)
-
-
 
