@@ -3,6 +3,7 @@ import time
 import ntptime
 import ujson
 import network
+from led_control import LEDControl
 from wifi_creds import *
 from pimoroni import RGBLED
 from picographics import PicoGraphics, DISPLAY_PICO_DISPLAY_2
@@ -12,8 +13,8 @@ from picographics import PicoGraphics, DISPLAY_PICO_DISPLAY_2
 dp = PicoGraphics(display=DISPLAY_PICO_DISPLAY_2)
 dp.set_font("bitmap8")
 dp.set_backlight(0.7)
-led = RGBLED(6, 7, 8)
-led.set_rgb(255,0,255)
+led = LEDControl(6, 7, 8)
+led.connecting()
 
 
 # Define some colors to use
@@ -52,7 +53,7 @@ locations = [
 wifi = network.WLAN(network.STA_IF)
 wifi.active(True)
 wifi.connect(wifi_ssid, wifi_password)
-led.set_rgb(0,255,0)
+led.connected()
 
 # Wait for the connection to complete
 while not wifi.isconnected():
@@ -72,6 +73,7 @@ def get_weather(latitude, longitude, api_key):
         return data
     else:
         raise Exception("Error: API call failed")
+        led.error()
 
 
 
@@ -134,7 +136,7 @@ def print_weather(location_name, temperature, feels_like, humidity, wind_speed, 
 #Display to screen:
 def pico_display_update2(location_name, temperature, feels_like, humidity, wind_speed, wind_card, cap_desc, lc, dd):
     clear()
-    led.set_rgb(0,0,0)
+    led.set_color("off")
     
     # Make it easier to adjust rows
     r2y = 80
@@ -203,4 +205,4 @@ while True:
 
         # Wait
         time.sleep(15)
-
+        
