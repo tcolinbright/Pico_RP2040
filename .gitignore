@@ -1,6 +1,9 @@
 
 PicoW/Tests/test_file.txt
+PicoW/.vscode
+PicoW/Wifi_Scanning_Project/.DS_Store
 Temp_Humidity_Explorer/json_dht_mqtt.py
 logs/2023-04-20.txt
 pico_weather_api.py
 pico_weather_api_display.py
+
