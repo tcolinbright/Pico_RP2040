@@ -1,4 +1,0 @@
-2023-04-19 19:37:13.156720: new test time
-2023-04-19 19:37:18.894429: ok we are logging again
-2023-04-19 19:37:30.436372: i wonder if i can start and restop the program?
-2023-04-19 19:37:46.526790: attempte after restart
