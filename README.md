@@ -1,2 +1,2 @@
-# Pico_Explorer
+# Pico
 Micropython for the Pico and Explorer Base.
