@@ -14,7 +14,7 @@ if not wlan.isconnected():
 print(wlan.isconnected())
 
 
-mqtt_server = "mqtt_server"
+mqtt_server = "mqtt_server_ip"
 port = 8883
 client_id = 'picofromshowerdht22'
 username = 'mqtt_username'
