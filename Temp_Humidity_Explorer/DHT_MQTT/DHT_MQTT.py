@@ -42,7 +42,7 @@ topic = b"topic_name"
 
 
 def mqtt_connect():
-    client = MQTTClient(client_id, mqtt_server, port, user=username, password=password, keepalive=3600, ssl=True, ssl_params={'server_hostname':'67478721149d4950abb591176395df1a.s2.eu.hivemq.cloud'})
+    client = MQTTClient(client_id, mqtt_server, port, user=username, password=password, keepalive=3600, ssl=True, ssl_params={'server_hostname':'api_key'})
     client.connect()
     print('Connected to %s MQTT Broker'%(mqtt_server))
     return client
