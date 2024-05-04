@@ -91,8 +91,7 @@ The main loop of the program runs continuously, reading and printing temperature
 
 ```python
 Probe Temp: {probe_tempC} C  {probe_tempF} F  |  DHT: {dht_tempC} C  {dht_tempF} F
-python
-Copy code
+
 while True:
     probe_tempC = probe_read()
     probe_tempF = c2f(probe_read())
